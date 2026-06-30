@@ -197,126 +197,13 @@
         box-shadow: 0 24px 80px rgb(0 0 0 / 34%);
       }
 
-      .market-screen {
+      .base-screen {
         position: absolute;
         inset: 0;
-        background:
-          radial-gradient(circle at 86% 50%, rgb(255 97 53 / 14%), transparent 15%),
-          radial-gradient(circle at 12% 58%, rgb(83 166 66 / 14%), transparent 22%),
-          linear-gradient(180deg, #121212 0%, #0f0f0f 100%);
-      }
-
-      .status {
-        position: absolute;
-        inset: 0 0 auto;
-        height: 56px;
-        padding: 25px 28px 0;
-        display: flex;
-        justify-content: space-between;
-        font-size: 28px;
-        line-height: 28px;
-        font-weight: 700;
-      }
-
-      .notch {
-        position: absolute;
-        left: 82px;
-        top: -1px;
-        width: 211px;
-        height: 57px;
-        border-radius: 0 0 26px 26px;
-        background: #000000;
-      }
-
-      .market-top {
-        position: absolute;
-        left: 24px;
-        right: 24px;
-        top: 110px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        color: #9b9da0;
-        font-size: 28px;
-        font-weight: 700;
-      }
-
-      .chart {
-        position: absolute;
-        left: 0;
-        right: 0;
-        top: 210px;
-        height: 455px;
-        opacity: 0.72;
-        background:
-          linear-gradient(90deg, transparent 0 8%, rgb(255 255 255 / 5%) 8% 8.2%, transparent 8.2% 100%),
-          repeating-linear-gradient(0deg, transparent 0 75px, rgb(255 255 255 / 5%) 76px 77px),
-          linear-gradient(180deg, transparent 0%, rgb(255 255 255 / 2%) 100%);
-      }
-
-      .candle {
-        position: absolute;
-        width: 12px;
-        border-radius: 2px;
-      }
-
-      .candle::before,
-      .candle::after {
-        content: "";
-        position: absolute;
-        left: 5px;
-        width: 2px;
-        background: currentColor;
-      }
-
-      .candle::before {
-        bottom: 100%;
-        height: 34px;
-      }
-
-      .candle::after {
-        top: 100%;
-        height: 32px;
-      }
-
-      .c1 { left: 24px; top: 238px; height: 71px; color: #53a642; background: #244e1c; }
-      .c2 { left: 92px; top: 308px; height: 46px; color: #ba4a4a; background: #682727; }
-      .c3 { left: 181px; top: 358px; height: 58px; color: #53a642; background: #244e1c; }
-      .c4 { left: 286px; top: 295px; height: 38px; color: #ba4a4a; background: #682727; }
-
-      .price {
-        position: absolute;
-        right: 0;
-        top: 407px;
-        padding: 3px 7px;
-        background: #7b3332;
-        border-radius: 4px 0 0 4px;
-        color: #bcbcbc;
-        font-size: 21px;
-      }
-
-      .trade-actions {
-        position: absolute;
-        left: 24px;
-        right: 24px;
-        bottom: 92px;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 24px;
-      }
-
-      .trade-actions div {
-        height: 79px;
-        border-radius: 4px;
-        opacity: 0.8;
-      }
-
-      .sell {
-        background: #7f2d2d;
-      }
-
-      .buy {
-        background: #276324;
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
       }
 
       .screen-dim {
@@ -327,50 +214,39 @@
 
       .modal {
         position: absolute;
-        left: 32px;
-        top: 120px;
-        width: 686px;
-        height: 1404px;
-        transform-origin: top left;
-        scale: 0.5;
+        left: 16px;
+        right: 16px;
+        top: 60px;
+        bottom: 34px;
+        width: auto;
+        height: auto;
         overflow: hidden;
+        isolation: isolate;
         border: 1px solid rgb(255 255 255 / 9%);
-        border-radius: 30px;
+        border-radius: 15px;
         background: rgb(17 17 17 / var(--modal-alpha));
         -webkit-backdrop-filter: blur(var(--blur));
         backdrop-filter: blur(var(--blur));
       }
 
-      .modal::before {
-        content: "";
-        position: absolute;
-        inset: -20px;
-        background:
-          radial-gradient(circle at 86% 18%, rgb(255 97 52 / 34%), transparent 10%),
-          radial-gradient(circle at 10% 76%, rgb(83 166 66 / 30%), transparent 15%),
-          radial-gradient(circle at 90% 68%, rgb(255 97 52 / 30%), transparent 13%),
-          radial-gradient(circle at 48% 23%, rgb(255 255 255 / 11%), transparent 22%);
-        mix-blend-mode: var(--blend);
-        pointer-events: none;
-      }
-
       .close {
         position: absolute;
-        top: 31px;
-        right: 36px;
-        width: 31px;
-        height: 31px;
+        top: 15px;
+        right: 18px;
+        width: 16px;
+        height: 16px;
+        z-index: 10;
       }
 
       .close::before,
       .close::after {
         content: "";
         position: absolute;
-        left: 14px;
-        top: -2px;
-        width: 4px;
-        height: 36px;
-        border-radius: 4px;
+        left: 7px;
+        top: -1px;
+        width: 2px;
+        height: 18px;
+        border-radius: 2px;
         background: #b5b5b5;
       }
 
@@ -384,28 +260,31 @@
 
       .rocket {
         position: absolute;
-        left: 12px;
-        top: 30px;
-        width: 658px;
-        height: 610px;
+        left: 6px;
+        top: 15px;
+        right: 6px;
+        width: auto;
+        height: 306px;
         object-fit: cover;
         display: block;
         mix-blend-mode: var(--blend);
         pointer-events: none;
+        z-index: 1;
       }
 
       .modal-copy {
         position: absolute;
-        top: 390px;
-        left: 42px;
-        right: 42px;
+        top: 326px;
+        left: 21px;
+        right: 21px;
         text-align: center;
+        z-index: 2;
       }
 
       .modal-copy h2 {
-        margin: 0 0 18px;
-        font-size: 46px;
-        line-height: 54px;
+        margin: 0 0 9px;
+        font-size: 23px;
+        line-height: 27px;
         font-weight: 700;
         letter-spacing: 0;
       }
@@ -413,25 +292,26 @@
       .modal-copy p {
         margin: 0 auto;
         color: #a6a6a8;
-        font-size: 36px;
-        line-height: 45px;
+        font-size: 18px;
+        line-height: 23px;
       }
 
       .benefits {
         position: absolute;
-        left: 31px;
-        right: 31px;
-        top: 612px;
+        left: 15px;
+        right: 15px;
+        top: 480px;
         overflow: hidden;
-        border-radius: 12px;
+        border-radius: 6px;
         background: #272829;
+        z-index: 2;
       }
 
       .benefit {
         display: grid;
-        grid-template-columns: 100px 1fr;
+        grid-template-columns: 50px 1fr;
         align-items: center;
-        min-height: 132px;
+        min-height: 66px;
         border-bottom: 1px solid rgb(0 0 0 / 55%);
       }
 
@@ -440,40 +320,55 @@
       }
 
       .benefit-icon {
-        color: #db6237;
-        text-align: center;
-        font-size: 52px;
-        line-height: 1;
+        width: 28px;
+        height: 28px;
+        margin: 0 auto;
+        background-size: contain;
+        background-position: center;
+        background-repeat: no-repeat;
+      }
+
+      .benefit-icon--fast {
+        background-image: url("./assets/icon-fast.png");
+      }
+
+      .benefit-icon--ai {
+        background-image: url("./assets/icon-ai.png");
+      }
+
+      .benefit-icon--copy {
+        background-image: url("./assets/icon-copy.png");
       }
 
       .benefit strong {
         display: block;
         color: #ffffff;
-        font-size: 34px;
-        line-height: 39px;
+        font-size: 17px;
+        line-height: 20px;
         font-weight: 500;
       }
 
       .benefit span {
         display: block;
-        margin-top: 6px;
+        margin-top: 3px;
         color: #7a7b7e;
-        font-size: 29px;
-        line-height: 34px;
+        font-size: 15px;
+        line-height: 17px;
       }
 
       .cta {
         position: absolute;
-        left: 31px;
-        right: 31px;
-        bottom: 30px;
-        height: 89px;
+        left: 15px;
+        right: 15px;
+        bottom: 16px;
+        height: 45px;
         border-radius: 999px;
         border: 0;
         background: var(--orange);
         color: #ffffff;
-        font-size: 32px;
+        font-size: 16px;
         line-height: 1;
+        z-index: 2;
       }
 
       @media (max-width: 1260px) {
@@ -511,12 +406,10 @@
   <body>
     <main class="stage">
       <section class="proof" aria-label="Explanation">
-        <h1>Здесь не нужна маска. Модалка блюрит фон под собой, а видео внутри неё накладывается через Lighten.</h1>
+        <h1>Прозрачное видео с Lighten-наложением</h1>
         <p>
-          По выбранному Figma-узлу `1972:30955`: сначала отдельный overlay затемняет весь экран примерно на 80%.
-          Затем сама модалка рисуется полупрозрачной тёмной поверхностью и делает `Background blur`/`backdrop-filter`
-          фона под собой. Уже внутри этой blurred-модалки лежит rocket video: `VIDEO fill`, `scaleMode: FILL`,
-          `blendMode: LIGHTEN`, размер около `329 x 305`.
+          Экран затемняется отдельным overlay. Поверх него стоит полупрозрачная модалка с `backdrop-filter: blur(20px)`.
+          Внутри модалки лежит rocket video, и только у видео включён `mix-blend-mode: lighten`.
         </p>
 
         <div class="cards">
@@ -556,14 +449,16 @@
         <pre class="code"><code>&lt;div class="screen-dim"&gt;&lt;/div&gt;
 
 &lt;section class="signup-modal"&gt;
-  &lt;video
-    class="signup-modal__rocket"
-    src="./assets/rocket-video.mp4"
-    autoplay
-    muted
-    loop
-    playsinline
-  &gt;&lt;/video&gt;
+  &lt;div class="signup-modal__hero"&gt;
+    &lt;video
+      class="signup-modal__rocket"
+      src="./assets/rocket-video.mp4"
+      autoplay
+      muted
+      loop
+      playsinline
+    &gt;&lt;/video&gt;
+  &lt;/div&gt;
 &lt;/section&gt;
 
 .screen-dim {
@@ -573,43 +468,35 @@
 }
 
 .signup-modal {
-  /* This layer creates the blurred modal surface. */
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  top: 60px;
+  bottom: 34px;
   background: rgb(17 17 17 / .30);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
 }
 
+.signup-modal__hero {
+  height: 306px;
+  overflow: hidden;
+}
+
 .signup-modal__rocket {
-  /* This media layer is inside the modal and uses Lighten. */
-  width: 329px;
-  height: 305px;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   mix-blend-mode: lighten; /* or screen */
   pointer-events: none;
 }</code></pre>
 
-        <div class="note">
-          <span class="dot"></span>
-          Важно: не переносить Lighten на всю модалку. Модалка отвечает за blur фона под собой, а Lighten применяется только к video layer внутри неё.
-        </div>
       </section>
 
       <section class="phone-wrap" aria-label="Live CSS demo">
         <div class="sample-title">Live CSS demo</div>
         <div class="phone">
-          <div class="market-screen">
-            <div class="notch"></div>
-            <div class="status"><span>9:41</span><span>▮▮▮ ≋ ▭</span></div>
-            <div class="market-top"><span>‹</span><span>EUR/USD</span><span>⌂</span></div>
-            <div class="chart">
-              <div class="candle c1"></div>
-              <div class="candle c2"></div>
-              <div class="candle c3"></div>
-              <div class="candle c4"></div>
-              <div class="price">1.17440</div>
-            </div>
-            <div class="trade-actions"><div class="sell"></div><div class="buy"></div></div>
-          </div>
+          <img class="base-screen" src="./assets/base-screen.png" alt="" aria-hidden="true" />
           <div class="screen-dim"></div>
           <div class="modal">
             <div class="close" aria-hidden="true"></div>
@@ -619,9 +506,9 @@
               <p>Trade and invest. 1,000+ instruments available</p>
             </div>
             <div class="benefits">
-              <div class="benefit"><div class="benefit-icon">ϟ</div><div><strong>Fast withdrawals</strong><span>Withdraw money 24/7</span></div></div>
-              <div class="benefit"><div class="benefit-icon">✦</div><div><strong>AI trading tools</strong><span>Earn with AI-powered tools</span></div></div>
-              <div class="benefit"><div class="benefit-icon">▱</div><div><strong>Copy trading</strong><span>Mirror experienced traders</span></div></div>
+              <div class="benefit"><div class="benefit-icon benefit-icon--fast"></div><div><strong>Fast withdrawals</strong><span>Withdraw money 24/7</span></div></div>
+              <div class="benefit"><div class="benefit-icon benefit-icon--ai"></div><div><strong>AI trading tools</strong><span>Earn with AI-powered tools</span></div></div>
+              <div class="benefit"><div class="benefit-icon benefit-icon--copy"></div><div><strong>Copy trading</strong><span>Mirror experienced traders</span></div></div>
             </div>
             <button class="cta" type="button">Sign up</button>
           </div>
