@@ -1,0 +1,547 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Libertex modal overlay proof</title>
+    <style>
+      :root {
+        --page: #3f3f3f;
+        --surface: #111111;
+        --panel: #242526;
+        --panel-2: #2d2e30;
+        --line: rgb(255 255 255 / 10%);
+        --text: #ffffff;
+        --muted: #9b9da0;
+        --dim: 0.78;
+        --modal-alpha: 0.3;
+        --blur: 20px;
+        --blend: lighten;
+        --orange: #ff6334;
+        --green: #53a642;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: var(--page);
+        color: var(--text);
+        font-family: Roboto, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      .stage {
+        min-height: 100vh;
+        display: grid;
+        grid-template-columns: minmax(320px, 720px) 375px 375px;
+        gap: 32px;
+        align-items: center;
+        justify-content: center;
+        padding: 32px;
+      }
+
+      .proof {
+        display: grid;
+        gap: 22px;
+      }
+
+      h1 {
+        max-width: 700px;
+        margin: 0;
+        font-size: 30px;
+        line-height: 38px;
+        font-weight: 600;
+        letter-spacing: 0;
+      }
+
+      p {
+        max-width: 680px;
+        margin: 0;
+        color: #d6d6d6;
+        font-size: 17px;
+        line-height: 26px;
+      }
+
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .card {
+        min-height: 142px;
+        padding: 16px;
+        border: 1px solid var(--line);
+        background: rgb(0 0 0 / 16%);
+        border-radius: 10px;
+      }
+
+      .card strong {
+        display: block;
+        margin-bottom: 10px;
+        font-size: 15px;
+        line-height: 20px;
+        font-weight: 600;
+      }
+
+      .card span {
+        display: block;
+        color: #c7c7c7;
+        font-size: 14px;
+        line-height: 21px;
+      }
+
+      .controls {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .control {
+        display: grid;
+        gap: 8px;
+      }
+
+      .control label,
+      .sample-title {
+        color: #ffffff;
+        font-size: 14px;
+        line-height: 18px;
+        font-weight: 600;
+      }
+
+      input[type="range"] {
+        width: 100%;
+        accent-color: var(--orange);
+      }
+
+      .toggle {
+        display: flex;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+      }
+
+      .toggle button {
+        flex: 1;
+        min-width: 0;
+        height: 34px;
+        border: 0;
+        color: #d7d7d7;
+        background: transparent;
+        font: inherit;
+        font-size: 13px;
+        cursor: pointer;
+      }
+
+      .toggle button.is-active {
+        color: #111111;
+        background: var(--orange);
+      }
+
+      .code {
+        overflow: auto;
+        padding: 16px;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: #202020;
+        color: #ececec;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 13px;
+        line-height: 20px;
+        white-space: pre;
+      }
+
+      .note {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #d0d0d0;
+        font-size: 14px;
+        line-height: 20px;
+      }
+
+      .dot {
+        width: 9px;
+        height: 9px;
+        flex: 0 0 auto;
+        border-radius: 50%;
+        background: var(--green);
+        box-shadow: 0 0 16px var(--green);
+      }
+
+      .phone-wrap {
+        display: grid;
+        gap: 10px;
+      }
+
+      .phone {
+        position: relative;
+        width: 375px;
+        height: 812px;
+        overflow: hidden;
+        isolation: isolate;
+        background: #111111;
+        box-shadow: 0 24px 80px rgb(0 0 0 / 34%);
+      }
+
+      .reference {
+        width: 375px;
+        height: 812px;
+        display: block;
+        object-fit: cover;
+        background: #111111;
+        box-shadow: 0 24px 80px rgb(0 0 0 / 34%);
+      }
+
+      .base-screen {
+        position: absolute;
+        inset: 0;
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .screen-dim {
+        position: absolute;
+        inset: 0;
+        background: rgb(17 17 17 / var(--dim));
+      }
+
+      .modal {
+        position: absolute;
+        left: 16px;
+        right: 16px;
+        top: 60px;
+        bottom: 34px;
+        width: auto;
+        height: auto;
+        overflow: hidden;
+        isolation: isolate;
+        border: 1px solid rgb(255 255 255 / 9%);
+        border-radius: 15px;
+        background: rgb(17 17 17 / var(--modal-alpha));
+        -webkit-backdrop-filter: blur(var(--blur));
+        backdrop-filter: blur(var(--blur));
+      }
+
+      .close {
+        position: absolute;
+        top: 15px;
+        right: 18px;
+        width: 16px;
+        height: 16px;
+        z-index: 10;
+      }
+
+      .close::before,
+      .close::after {
+        content: "";
+        position: absolute;
+        left: 7px;
+        top: -1px;
+        width: 2px;
+        height: 18px;
+        border-radius: 2px;
+        background: #b5b5b5;
+      }
+
+      .close::before {
+        rotate: 45deg;
+      }
+
+      .close::after {
+        rotate: -45deg;
+      }
+
+      .rocket {
+        position: absolute;
+        left: 6px;
+        top: 15px;
+        right: 6px;
+        width: auto;
+        height: 306px;
+        object-fit: cover;
+        display: block;
+        mix-blend-mode: var(--blend);
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      .modal-copy {
+        position: absolute;
+        top: 326px;
+        left: 21px;
+        right: 21px;
+        text-align: center;
+        z-index: 2;
+      }
+
+      .modal-copy h2 {
+        margin: 0 0 9px;
+        font-size: 23px;
+        line-height: 27px;
+        font-weight: 700;
+        letter-spacing: 0;
+      }
+
+      .modal-copy p {
+        margin: 0 auto;
+        color: #a6a6a8;
+        font-size: 18px;
+        line-height: 23px;
+      }
+
+      .benefits {
+        position: absolute;
+        left: 15px;
+        right: 15px;
+        top: 480px;
+        overflow: hidden;
+        border-radius: 6px;
+        background: #272829;
+        z-index: 2;
+      }
+
+      .benefit {
+        display: grid;
+        grid-template-columns: 50px 1fr;
+        align-items: center;
+        min-height: 66px;
+        border-bottom: 1px solid rgb(0 0 0 / 55%);
+      }
+
+      .benefit:last-child {
+        border-bottom: 0;
+      }
+
+      .benefit-icon {
+        width: 28px;
+        height: 28px;
+        margin: 0 auto;
+        background-size: contain;
+        background-position: center;
+        background-repeat: no-repeat;
+      }
+
+      .benefit-icon--fast {
+        background-image: url("./assets/icon-fast.png");
+      }
+
+      .benefit-icon--ai {
+        background-image: url("./assets/icon-ai.png");
+      }
+
+      .benefit-icon--copy {
+        background-image: url("./assets/icon-copy.png");
+      }
+
+      .benefit strong {
+        display: block;
+        color: #ffffff;
+        font-size: 17px;
+        line-height: 20px;
+        font-weight: 500;
+      }
+
+      .benefit span {
+        display: block;
+        margin-top: 3px;
+        color: #7a7b7e;
+        font-size: 15px;
+        line-height: 17px;
+      }
+
+      .cta {
+        position: absolute;
+        left: 15px;
+        right: 15px;
+        bottom: 16px;
+        height: 45px;
+        border-radius: 999px;
+        border: 0;
+        background: var(--orange);
+        color: #ffffff;
+        font-size: 16px;
+        line-height: 1;
+        z-index: 2;
+      }
+
+      @media (max-width: 1260px) {
+        .stage {
+          grid-template-columns: minmax(320px, 760px) 375px;
+        }
+
+        .phone-wrap:last-child {
+          grid-column: 2;
+        }
+      }
+
+      @media (max-width: 900px) {
+        .stage {
+          grid-template-columns: minmax(0, 1fr);
+          justify-items: center;
+          padding: 22px;
+        }
+
+        .proof {
+          width: min(100%, 680px);
+        }
+
+        .cards,
+        .controls {
+          grid-template-columns: 1fr;
+        }
+
+        .phone-wrap:last-child {
+          grid-column: auto;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="stage">
+      <section class="proof" aria-label="Explanation">
+        <h1>Прозрачное видео с Lighten-наложением</h1>
+        <p>
+          Экран затемняется отдельным overlay. Поверх него стоит полупрозрачная модалка с `backdrop-filter: blur(20px)`.
+          Внутри модалки лежит rocket video, и только у видео включён `mix-blend-mode: lighten`.
+        </p>
+
+        <div class="cards">
+          <div class="card">
+            <strong>1. Screen dim</strong>
+            <span>Обычный прямоугольник поверх всего экрана: `rgba(17,17,17,.78)`. Он затемняет фон, но ничего не вырезает.</span>
+          </div>
+          <div class="card">
+            <strong>2. Modal blur</strong>
+            <span>Blur принадлежит самой модалке: `backdrop-filter: blur(20px)`. Он размывает только то, что находится под модалкой.</span>
+          </div>
+          <div class="card">
+            <strong>3. Video Lighten</strong>
+            <span>Rocket video находится уже внутри модалки и смешивается с её поверхностью через `mix-blend-mode: lighten`.</span>
+          </div>
+        </div>
+
+        <div class="controls" aria-label="Demo controls">
+          <div class="control">
+            <label for="dim">Dim overlay</label>
+            <input id="dim" type="range" min="0" max="0.95" step="0.01" value="0.78" />
+          </div>
+          <div class="control">
+            <label for="blur">Backdrop blur</label>
+            <input id="blur" type="range" min="0" max="36" step="1" value="20" />
+          </div>
+          <div class="control">
+            <label>Blend mode</label>
+            <div class="toggle">
+              <button class="is-active" type="button" data-blend="lighten">lighten</button>
+              <button type="button" data-blend="screen">screen</button>
+              <button type="button" data-blend="normal">normal</button>
+            </div>
+          </div>
+        </div>
+
+        <pre class="code"><code>&lt;div class="screen-dim"&gt;&lt;/div&gt;
+
+&lt;section class="signup-modal"&gt;
+  &lt;div class="signup-modal__hero"&gt;
+    &lt;video
+      class="signup-modal__rocket"
+      src="./assets/rocket-video.mp4"
+      autoplay
+      muted
+      loop
+      playsinline
+    &gt;&lt;/video&gt;
+  &lt;/div&gt;
+&lt;/section&gt;
+
+.screen-dim {
+  position: absolute;
+  inset: 0;
+  background: rgb(17 17 17 / .78);
+}
+
+.signup-modal {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  top: 60px;
+  bottom: 34px;
+  background: rgb(17 17 17 / .30);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.signup-modal__hero {
+  height: 306px;
+  overflow: hidden;
+}
+
+.signup-modal__rocket {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  mix-blend-mode: lighten; /* or screen */
+  pointer-events: none;
+}</code></pre>
+
+      </section>
+
+      <section class="phone-wrap" aria-label="Live CSS demo">
+        <div class="sample-title">Live CSS demo</div>
+        <div class="phone">
+          <img class="base-screen" src="./assets/base-screen.png" alt="" aria-hidden="true" />
+          <div class="screen-dim"></div>
+          <div class="modal">
+            <div class="close" aria-hidden="true"></div>
+            <video class="rocket" src="./assets/rocket-video.mp4" autoplay muted loop playsinline aria-hidden="true"></video>
+            <div class="modal-copy">
+              <h2>Sign Up to Continue</h2>
+              <p>Trade and invest. 1,000+ instruments available</p>
+            </div>
+            <div class="benefits">
+              <div class="benefit"><div class="benefit-icon benefit-icon--fast"></div><div><strong>Fast withdrawals</strong><span>Withdraw money 24/7</span></div></div>
+              <div class="benefit"><div class="benefit-icon benefit-icon--ai"></div><div><strong>AI trading tools</strong><span>Earn with AI-powered tools</span></div></div>
+              <div class="benefit"><div class="benefit-icon benefit-icon--copy"></div><div><strong>Copy trading</strong><span>Mirror experienced traders</span></div></div>
+            </div>
+            <button class="cta" type="button">Sign up</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="phone-wrap" aria-label="Figma reference">
+        <div class="sample-title">Figma reference</div>
+        <img class="reference" src="./assets/reference-modal.png" alt="Reference modal screenshot from Figma" />
+      </section>
+    </main>
+
+    <script>
+      const root = document.documentElement;
+      const dim = document.querySelector("#dim");
+      const blur = document.querySelector("#blur");
+      const blendButtons = document.querySelectorAll("[data-blend]");
+
+      dim.addEventListener("input", () => {
+        root.style.setProperty("--dim", dim.value);
+      });
+
+      blur.addEventListener("input", () => {
+        root.style.setProperty("--blur", `${blur.value}px`);
+      });
+
+      blendButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          blendButtons.forEach((item) => item.classList.remove("is-active"));
+          button.classList.add("is-active");
+          root.style.setProperty("--blend", button.dataset.blend);
+        });
+      });
+    </script>
+  </body>
+</html>
