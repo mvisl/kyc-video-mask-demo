@@ -511,11 +511,12 @@
   <body>
     <main class="stage">
       <section class="proof" aria-label="Explanation">
-        <h1>Здесь не нужна маска. Это слои: затемнение экрана, световое наложение и blur под модалкой.</h1>
+        <h1>Здесь не нужна маска. Модалка блюрит фон под собой, а видео внутри неё накладывается через Lighten.</h1>
         <p>
-          По выбранному Figma-узлу `1972:30955`: базовый overlay затемняет экран примерно на 80%, сама модалка имеет
-          полупрозрачный тёмный fill около 30% и `Background blur` радиусом 20 px. Ракета внутри — это настоящий video
-          layer из Figma: `VIDEO fill`, `scaleMode: FILL`, `blendMode: LIGHTEN`, размер около `329 x 305`.
+          По выбранному Figma-узлу `1972:30955`: сначала отдельный overlay затемняет весь экран примерно на 80%.
+          Затем сама модалка рисуется полупрозрачной тёмной поверхностью и делает `Background blur`/`backdrop-filter`
+          фона под собой. Уже внутри этой blurred-модалки лежит rocket video: `VIDEO fill`, `scaleMode: FILL`,
+          `blendMode: LIGHTEN`, размер около `329 x 305`.
         </p>
 
         <div class="cards">
@@ -525,11 +526,11 @@
           </div>
           <div class="card">
             <strong>2. Modal blur</strong>
-            <span>Blur ставится на поверхность модалки: `backdrop-filter: blur(20px)`. Фон модалки должен быть прозрачным.</span>
+            <span>Blur принадлежит самой модалке: `backdrop-filter: blur(20px)`. Он размывает только то, что находится под модалкой.</span>
           </div>
           <div class="card">
-            <strong>3. Lighten layer</strong>
-            <span>Rocket video кладётся отдельным медиа-слоем поверх blurred surface: `mix-blend-mode: lighten` или `screen`.</span>
+            <strong>3. Video Lighten</strong>
+            <span>Rocket video находится уже внутри модалки и смешивается с её поверхностью через `mix-blend-mode: lighten`.</span>
           </div>
         </div>
 
@@ -572,12 +573,14 @@
 }
 
 .signup-modal {
+  /* This layer creates the blurred modal surface. */
   background: rgb(17 17 17 / .30);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
 }
 
 .signup-modal__rocket {
+  /* This media layer is inside the modal and uses Lighten. */
   width: 329px;
   height: 305px;
   object-fit: cover;
@@ -587,7 +590,7 @@
 
         <div class="note">
           <span class="dot"></span>
-          Важно: `backdrop-filter` размывает только пиксели за элементом. Если поставить blur на фон или на overlay, получится другой эффект.
+          Важно: не переносить Lighten на всю модалку. Модалка отвечает за blur фона под собой, а Lighten применяется только к video layer внутри неё.
         </div>
       </section>
 
