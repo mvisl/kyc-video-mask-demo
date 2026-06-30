@@ -242,12 +242,11 @@
 
       .rocket {
         position: absolute;
-        left: 6px;
-        top: 15px;
-        right: 6px;
-        width: auto;
-        height: 306px;
-        object-fit: contain;
+        left: 6.09px;
+        top: 15.08px;
+        width: 329.17px;
+        height: 305.08px;
+        object-fit: fill;
         display: block;
         mix-blend-mode: var(--blend);
         pointer-events: none;
@@ -258,9 +257,9 @@
         position: absolute;
         left: 0;
         right: 0;
-        top: 335px;
+        top: 322px;
         width: 100%;
-        height: calc(100% - 335px);
+        height: calc(100% - 322px);
         object-fit: cover;
         z-index: 2;
         pointer-events: none;
@@ -384,12 +383,17 @@
   flex: 1 1 auto;
   min-height: 0;
   overflow: hidden;
+  position: relative;
 }
 
 .signup-modal__rocket {
-  width: 100%;
+  position: absolute;
+  left: 0.6px;
+  top: -0.9px;
+  width: 329px;
   height: 100%;
-  object-fit: contain;
+  object-fit: fill;
+  display: block;
   mix-blend-mode: lighten; /* or screen */
   pointer-events: none;
 }
