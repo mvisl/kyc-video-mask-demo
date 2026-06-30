@@ -260,6 +260,10 @@
         transform: rotate(-45deg);
       }
 
+      .rocket-source {
+        display: none;
+      }
+
       .rocket {
         position: absolute;
         left: 6.09px;
@@ -304,7 +308,7 @@
         position: absolute;
         left: 16px;
         right: 16px;
-        top: 462px;
+        top: 426px;
         overflow: hidden;
         border-radius: 6px;
         background: #272829;
@@ -445,13 +449,14 @@
 
   &lt;div class="signup-modal__video"&gt;
     &lt;video
-      class="signup-modal__rocket"
+      class="signup-modal__rocket-source"
       src="./assets/rocket-video.mp4"
       autoplay
       muted
       loop
       playsinline
     &gt;&lt;/video&gt;
+    &lt;canvas class="signup-modal__rocket"&gt;&lt;/canvas&gt;
   &lt;/div&gt;
 
   &lt;div class="signup-modal__content"&gt;...&lt;/div&gt;
@@ -484,6 +489,10 @@
   height: 306px;
 }
 
+.signup-modal__rocket-source {
+  display: none;
+}
+
 .signup-modal__rocket {
   position: absolute;
   left: 0.6px;
@@ -511,7 +520,8 @@
           <img class="base-screen" src="./assets/base-screen.png" alt="" aria-hidden="true" />
           <div class="screen-dim"></div>
           <div class="modal">
-            <video class="rocket" src="./assets/rocket-video.mp4" autoplay muted loop playsinline aria-hidden="true"></video>
+            <video class="rocket-source" src="./assets/rocket-video.mp4" autoplay muted loop playsinline preload="auto" aria-hidden="true"></video>
+            <canvas class="rocket" width="329" height="305" aria-hidden="true"></canvas>
             <button class="close" type="button" aria-label="Close"></button>
             <div class="modal-copy">
               <h2>Sign Up to Continue</h2>
@@ -553,6 +563,47 @@
       const dim = document.querySelector("#dim");
       const blur = document.querySelector("#blur");
       const blendButtons = document.querySelectorAll("[data-blend]");
+      const sourceVideo = document.querySelector(".rocket-source");
+      const rocketCanvas = document.querySelector(".rocket");
+      const rocketContext = rocketCanvas.getContext("2d", { willReadFrequently: true });
+      const workingCanvas = document.createElement("canvas");
+      const workingContext = workingCanvas.getContext("2d", { willReadFrequently: true });
+
+      workingCanvas.width = rocketCanvas.width;
+      workingCanvas.height = rocketCanvas.height;
+
+      let rocketRenderStarted = false;
+
+      function renderRocketFrame() {
+        if (sourceVideo.readyState >= 2) {
+          workingContext.drawImage(sourceVideo, 0, 0, workingCanvas.width, workingCanvas.height);
+          const frame = workingContext.getImageData(0, 0, workingCanvas.width, workingCanvas.height);
+          const data = frame.data;
+
+          for (let i = 0; i < data.length; i += 4) {
+            const r = data[i];
+            const g = data[i + 1];
+            const b = data[i + 2];
+            const luma = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+            const alpha = Math.max(0, Math.min(255, (luma - 10) * 7));
+            data[i + 3] = Math.min(data[i + 3], alpha);
+          }
+
+          rocketContext.putImageData(frame, 0, 0);
+        }
+
+        requestAnimationFrame(renderRocketFrame);
+      }
+
+      function startRocketRender() {
+        if (rocketRenderStarted) return;
+        rocketRenderStarted = true;
+        sourceVideo.play().catch(() => {});
+        renderRocketFrame();
+      }
+
+      sourceVideo.addEventListener("loadeddata", startRocketRender, { once: true });
+      if (sourceVideo.readyState >= 2) startRocketRender();
 
       dim.addEventListener("input", () => {
         root.style.setProperty("--dim", dim.value);
