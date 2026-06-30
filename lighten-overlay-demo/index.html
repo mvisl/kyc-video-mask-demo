@@ -13,7 +13,7 @@
         --line: rgb(255 255 255 / 10%);
         --text: #ffffff;
         --muted: #9b9da0;
-        --dim: 0.78;
+        --dim: 0.8;
         --modal-alpha: 0.3;
         --blur: 20px;
         --blend: lighten;
@@ -38,7 +38,7 @@
         display: grid;
         grid-template-columns: minmax(320px, 720px) 375px 375px;
         gap: 32px;
-        align-items: center;
+        align-items: start;
         justify-content: center;
         padding: 32px;
       }
@@ -217,7 +217,7 @@
         left: 16px;
         right: 16px;
         top: 60px;
-        bottom: 34px;
+        bottom: 50px;
         width: auto;
         height: auto;
         overflow: hidden;
@@ -231,31 +231,13 @@
 
       .close {
         position: absolute;
-        top: 15px;
-        right: 18px;
-        width: 16px;
-        height: 16px;
+        top: 14px;
+        right: 8px;
+        width: 36px;
+        height: 36px;
+        display: block;
+        object-fit: contain;
         z-index: 10;
-      }
-
-      .close::before,
-      .close::after {
-        content: "";
-        position: absolute;
-        left: 7px;
-        top: -1px;
-        width: 2px;
-        height: 18px;
-        border-radius: 2px;
-        background: #b5b5b5;
-      }
-
-      .close::before {
-        rotate: 45deg;
-      }
-
-      .close::after {
-        rotate: -45deg;
       }
 
       .rocket {
@@ -272,103 +254,16 @@
         z-index: 1;
       }
 
-      .modal-copy {
+      .modal-lower-ui {
         position: absolute;
-        top: 326px;
-        left: 21px;
-        right: 21px;
-        text-align: center;
+        left: 0;
+        right: 0;
+        top: 306px;
+        width: 100%;
+        height: calc(100% - 306px);
+        object-fit: cover;
         z-index: 2;
-      }
-
-      .modal-copy h2 {
-        margin: 0 0 9px;
-        font-size: 23px;
-        line-height: 27px;
-        font-weight: 700;
-        letter-spacing: 0;
-      }
-
-      .modal-copy p {
-        margin: 0 auto;
-        color: #a6a6a8;
-        font-size: 18px;
-        line-height: 23px;
-      }
-
-      .benefits {
-        position: absolute;
-        left: 15px;
-        right: 15px;
-        top: 480px;
-        overflow: hidden;
-        border-radius: 6px;
-        background: #272829;
-        z-index: 2;
-      }
-
-      .benefit {
-        display: grid;
-        grid-template-columns: 50px 1fr;
-        align-items: center;
-        min-height: 66px;
-        border-bottom: 1px solid rgb(0 0 0 / 55%);
-      }
-
-      .benefit:last-child {
-        border-bottom: 0;
-      }
-
-      .benefit-icon {
-        width: 28px;
-        height: 28px;
-        margin: 0 auto;
-        background-size: contain;
-        background-position: center;
-        background-repeat: no-repeat;
-      }
-
-      .benefit-icon--fast {
-        background-image: url("./assets/icon-fast.png");
-      }
-
-      .benefit-icon--ai {
-        background-image: url("./assets/icon-ai.png");
-      }
-
-      .benefit-icon--copy {
-        background-image: url("./assets/icon-copy.png");
-      }
-
-      .benefit strong {
-        display: block;
-        color: #ffffff;
-        font-size: 17px;
-        line-height: 20px;
-        font-weight: 500;
-      }
-
-      .benefit span {
-        display: block;
-        margin-top: 3px;
-        color: #7a7b7e;
-        font-size: 15px;
-        line-height: 17px;
-      }
-
-      .cta {
-        position: absolute;
-        left: 15px;
-        right: 15px;
-        bottom: 16px;
-        height: 45px;
-        border-radius: 999px;
-        border: 0;
-        background: var(--orange);
-        color: #ffffff;
-        font-size: 16px;
-        line-height: 1;
-        z-index: 2;
+        pointer-events: none;
       }
 
       @media (max-width: 1260px) {
@@ -415,7 +310,7 @@
         <div class="cards">
           <div class="card">
             <strong>1. Screen dim</strong>
-            <span>Обычный прямоугольник поверх всего экрана: `rgba(17,17,17,.78)`. Он затемняет фон, но ничего не вырезает.</span>
+            <span>Обычный прямоугольник поверх всего экрана: `rgba(17,17,17,.80)`. Он затемняет фон, но ничего не вырезает.</span>
           </div>
           <div class="card">
             <strong>2. Modal blur</strong>
@@ -430,7 +325,7 @@
         <div class="controls" aria-label="Demo controls">
           <div class="control">
             <label for="dim">Dim overlay</label>
-            <input id="dim" type="range" min="0" max="0.95" step="0.01" value="0.78" />
+            <input id="dim" type="range" min="0" max="0.95" step="0.01" value="0.8" />
           </div>
           <div class="control">
             <label for="blur">Backdrop blur</label>
@@ -449,7 +344,9 @@
         <pre class="code"><code>&lt;div class="screen-dim"&gt;&lt;/div&gt;
 
 &lt;section class="signup-modal"&gt;
-  &lt;div class="signup-modal__hero"&gt;
+  &lt;button class="signup-modal__close"&gt;&lt;/button&gt;
+
+  &lt;div class="signup-modal__video"&gt;
     &lt;video
       class="signup-modal__rocket"
       src="./assets/rocket-video.mp4"
@@ -459,12 +356,15 @@
       playsinline
     &gt;&lt;/video&gt;
   &lt;/div&gt;
+
+  &lt;div class="signup-modal__content"&gt;...&lt;/div&gt;
+  &lt;button class="signup-modal__submit"&gt;Sign up&lt;/button&gt;
 &lt;/section&gt;
 
 .screen-dim {
   position: absolute;
   inset: 0;
-  background: rgb(17 17 17 / .78);
+  background: rgb(17 17 17 / .80);
 }
 
 .signup-modal {
@@ -472,14 +372,17 @@
   left: 16px;
   right: 16px;
   top: 60px;
-  bottom: 34px;
+  bottom: 50px;
+  display: flex;
+  flex-direction: column;
   background: rgb(17 17 17 / .30);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
 }
 
-.signup-modal__hero {
-  height: 306px;
+.signup-modal__video {
+  flex: 1 1 auto;
+  min-height: 0;
   overflow: hidden;
 }
 
@@ -489,6 +392,13 @@
   object-fit: cover;
   mix-blend-mode: lighten; /* or screen */
   pointer-events: none;
+}
+
+.signup-modal__close {
+  position: absolute;
+  z-index: 10;
+  top: 14px;
+  right: 8px;
 }</code></pre>
 
       </section>
@@ -499,18 +409,9 @@
           <img class="base-screen" src="./assets/base-screen.png" alt="" aria-hidden="true" />
           <div class="screen-dim"></div>
           <div class="modal">
-            <div class="close" aria-hidden="true"></div>
             <video class="rocket" src="./assets/rocket-video.mp4" autoplay muted loop playsinline aria-hidden="true"></video>
-            <div class="modal-copy">
-              <h2>Sign Up to Continue</h2>
-              <p>Trade and invest. 1,000+ instruments available</p>
-            </div>
-            <div class="benefits">
-              <div class="benefit"><div class="benefit-icon benefit-icon--fast"></div><div><strong>Fast withdrawals</strong><span>Withdraw money 24/7</span></div></div>
-              <div class="benefit"><div class="benefit-icon benefit-icon--ai"></div><div><strong>AI trading tools</strong><span>Earn with AI-powered tools</span></div></div>
-              <div class="benefit"><div class="benefit-icon benefit-icon--copy"></div><div><strong>Copy trading</strong><span>Mirror experienced traders</span></div></div>
-            </div>
-            <button class="cta" type="button">Sign up</button>
+            <img class="modal-lower-ui" src="./assets/modal-lower-ui.png" alt="" aria-hidden="true" />
+            <img class="close" src="./assets/close-reference.png" alt="" aria-hidden="true" />
           </div>
         </div>
       </section>
